@@ -1,0 +1,213 @@
+<testsuite name="Mocha Tests" tests="211" failures="0" errors="0" skipped="0" timestamp="Tue, 05 May 2015 16:46:50 GMT" time="1.296">
+<testcase classname="tests suite" name="define suites" time="0.793"/>
+<testcase classname="Application" name="disconnect should call spiceConnection disconnect" time="0.003"/>
+<testcase classname="Application" name="disconnect should call busConnection disconnect" time="0.003"/>
+<testcase classname="Application" name="When spiceConnection fires channelConnected with channel inputs should call clientGui releaseAllKeys " time="0"/>
+<testcase classname="Application" name="onTimeLapseDetected calls executeExternalCallback with the lapse" time="0.003"/>
+<testcase classname="Application" name="on spiceConnection.error event calls externalCallback with error" time="0.001"/>
+<testcase classname="Application" name="onClipBoardData calls executeExternalCallback when externalClipboardHandling" time="0.001"/>
+<testcase classname="Application" name="onClipBoardData calls clientGui setClipBoardData when not externalClipboardHandling" time="0"/>
+<testcase classname="Application" name="onWrongPathError calls to executeExternalCallback" time="0"/>
+<testcase classname="BusConnection" name="connect should call socket connect with uri when using busHostList" time="0.001"/>
+<testcase classname="BusConnection" name="connect should call socket connect with uri when using busHost and busPort" time="0.001"/>
+<testcase classname="BusConnection" name="connect should call websocket setBinaryType on binary" time="0.001"/>
+<testcase classname="BusConnection" name="disconnect should call socket close" time="0"/>
+<testcase classname="BusConnection" name="send should call socket send" time="0"/>
+<testcase classname="BusProcess: #parseMessage" name="Should fire &quot;wrongPathError&quot; when the type is &quot;launchApplication&quot; and the event is &quot;applicationLauncherWrongAppPathError&quot;" time="0.002"/>
+<testcase classname="BusProcess: #parseMessage" name="Should not fire &quot;wrongPathError&quot; when the type is &quot;launchApplication&quot; and the event is not &quot;applicationLauncherWrongAppPathError&quot;" time="0"/>
+<testcase classname="ClientGui:" name="releaseAllKeys calls stuckKeysHandler.releaseAllKeys" time="0"/>
+<testcase classname="ClientGui:" name="fillSubCanvas called with filterPosition will call to CollisionDetector thereIsBoxCollition" time="0.001"/>
+<testcase classname="ClientGui:" name="fillSubCanvas called with filterPosition and position collides with subcanvas will call to drawSubCanvas with correct data" time="0.001"/>
+<testcase classname="ClientGui:" name="fillSubCanvas called with filterPosition and position collides with subcanvas will not call to drawSubCanvas" time="0"/>
+<testcase classname="ClientGui: #generateEvent" name="Should get the value of the input when is a key event" time="0.001"/>
+<testcase classname="ClientGui: #generateEvent" name="Should manage the params of the event when there is a value with length = 1 and is a key event" time="0.001"/>
+<testcase classname="ClientGui: #generateEvent" name="Should not manage the params when there is no value when is a key event" time="0"/>
+<testcase classname="ClientGui: #generateEvent" name="Should check if a special key has been pressed when is a key event" time="0.001"/>
+<testcase classname="ClientGui: #disableKeyboard" name="Should call to inputManager.disable" time="0.001"/>
+<testcase classname="ClientGui: #enableKeyboard" name="Should call to inputManager.enable" time="0.001"/>
+<testcase classname="ClusterNodeChooser" name="setNodeList should shuffle the received list" time="0.001"/>
+<testcase classname="ClusterNodeChooser" name="2 consecutive calls to getAnother should return different nodes when there are more than 1" time="0.002"/>
+<testcase classname="ClusterNodeChooser" name="consecutive calls to getAnother should return always the same node when there is only one" time="0"/>
+<testcase classname="ClusterNodeChooser" name="n+1 consecutive calls to getAnother return the same node on first call and on n+1 call" time="0"/>
+<testcase classname="CollisionDetector" name="thereIsBoxCollision will return correctData with set 0" time="0"/>
+<testcase classname="CollisionDetector" name="thereIsBoxCollision will return correctData with set 1" time="0.001"/>
+<testcase classname="CollisionDetector" name="thereIsBoxCollision will return correctData with set 2" time="0"/>
+<testcase classname="ConnectionControl" name="connect should call socket connect with uri" time="0"/>
+<testcase classname="ConnectionControl" name="connect should call socket setOnMessageCallback with callback" time="0.001"/>
+<testcase classname="ConnectionControl" name="disconnect should call socket disconnect" time="0"/>
+<testcase classname="DisplayProcess #process()" name="displayProcess process should call packetFilfer process" time="0.001"/>
+<testcase classname="DisplayProcess #process()" name="displayProcess process should call packetFilfer notifyEnd" time="0.001"/>
+<testcase classname="DisplayProcess #process()" name="displayProcess process should call runq add" time="0"/>
+<testcase classname="DisplayProcess #process()" name="displayProcess process should call runq process" time="0.001"/>
+<testcase classname="DisplayProcess #process()" name="displayProcess process should call runq process" time="0.001"/>
+<testcase classname="DisplayProcess #processPacket()" name="displayRouter packetProcess should execute the correct route" time="0"/>
+<testcase classname="EventObject #addListener()" name="Should add event to list" time="0"/>
+<testcase classname="EventObject #addListener()" name="Should add two event to list" time="0"/>
+<testcase classname="EventObject #removeEvent()" name="Should remove correct event" time="0.001"/>
+<testcase classname="EventObject #clearEvents()" name="Should remove all events and listeners" time="0"/>
+<testcase classname="EventObject #fire()" name="Should trigger selected event" time="0"/>
+<testcase classname="EventObject #fire()" name="Should keep scope" time="0"/>
+<testcase classname="Image uncompressor suite" name="processLz calls syncAsyncHandler.dispatch" time="0.001"/>
+<testcase classname="Image uncompressor suite" name="processLz calls LZSS.demarshall_rgb when brush" time="0.001"/>
+<testcase classname="Image uncompressor suite" name="processLz calls LZSS.demarshall_rgb when no brush and imageData is array" time="0.001"/>
+<testcase classname="Image uncompressor suite" name="processLz calls LZSS.demarshall_rgb when no brush and imageData is typedArray" time="0.001"/>
+<testcase classname="Image uncompressor suite" name="processQuic calls syncAsyncHandler.dispatch with opaque" time="0.001"/>
+<testcase classname="Image uncompressor suite" name="processQuic calls syncAsyncHandler.dispatch without opaque" time="0"/>
+<testcase classname="Image uncompressor suite" name="process calls processQuic when image is quic" time="0.001"/>
+<testcase classname="Image uncompressor suite" name="process calls processLz when image is lz" time="0"/>
+<testcase classname="Image uncompressor suite" name="extractLzHeader returns an imagedata with the header extracted when no brush" time="0.001"/>
+<testcase classname="InputManager #setCurrentWindow" name="Should call addListeners with provided window" time="0.001"/>
+<testcase classname="InputManager #setCurrentWindow" name="Should set currentWindow with provided window" time="0.001"/>
+<testcase classname="InputManager #setCurrentWindow" name="Should set currentWindow with provided window" time="0"/>
+<testcase classname="InputManager #setCurrentWindow" name="Should call prepend with provided window" time="0"/>
+<testcase classname="InputManager #setCurrentWindow" name="Should call remove from input element if there is currentWindow" time="0.001"/>
+<testcase classname="InputManager #setCurrentWindow" name="Should call unbind when there is currentWindow" time="0.001"/>
+<testcase classname="InputManager #_onBlur" name="Should call to window.on(blur)" time="0"/>
+<testcase classname="InputManager #_onBlur" name="Should call to input.focus when window.blur is triggered and checkFocus = true" time="0.001"/>
+<testcase classname="InputManager #_onBlur" name="Should not call to input.select when blur is triggered and checkFocus = false" time="0.001"/>
+<testcase classname="InputManager #_onBlur" name="Should fire releaseKey for shift, ctrl &amp; alt" time="0.001"/>
+<testcase classname="InputManager #_onInput" name="Should call to input.on(input)" time="0.001"/>
+<testcase classname="InputManager #_onInput" name="Should reset the value when the input value has length &gt; 1" time="0.001"/>
+<testcase classname="InputManager #_onInput" name="Should preserve the value when the input value has length = 1" time="0"/>
+<testcase classname="InputManager #enable" name="Should call to input.select" time="0"/>
+<testcase classname="InputManager #enable" name="Should set checkFocus = true" time="0"/>
+<testcase classname="InputManager #disable" name="Should call to input.blur" time="0"/>
+<testcase classname="InputManager #disable" name="Should set checkFocus = false" time="0"/>
+<testcase classname="InputManager #reset" name="Should call to input.val" time="0"/>
+<testcase classname="InputManager #getValue" name="Should call to input.val" time="0.001"/>
+<testcase classname="InputManager #getValue" name="Should reset the input when there is a value" time="0"/>
+<testcase classname="InputManager #getValue" name="Should do not reset the input when there is a value" time="0"/>
+<testcase classname="InputManager #getValue" name="Should return a value" time="0"/>
+<testcase classname="InputManager #manageChar" name="returns a updated params" time="0"/>
+<testcase classname="InputManager #manageChar" name="returns a updated params" time="0"/>
+<testcase classname="InputManager #manageChar" name="returns a updated params" time="0.001"/>
+<testcase classname="InputManager #manageChar" name="returns a updated params" time="0"/>
+<testcase classname="InputManager #manageChar" name="the returned data is different from the params passed" time="0"/>
+<testcase classname="Keymap #handledByCharmap" name="return true when type is inputmanager" time="0"/>
+<testcase classname="Keymap #handledByCharmap" name="return false when type is not inputmanager" time="0"/>
+<testcase classname="PacketController #getNextPacket()" name="It fires chunkComplete event" time="0.001"/>
+<testcase classname="PacketController #getNextPacket()" name="It calls getStatus from SizeDefiner" time="0.001"/>
+<testcase classname="PacketController #getNextPacket()" name="It calls getSize from sizeDefiner" time="0.001"/>
+<testcase classname="PacketController #getNextPacket()" name="It calls getBytes from packetExtractor" time="0"/>
+<testcase classname="PacketController #getNextPacket()" name="It calls getSize from sizeDefiner with the last data acquired" time="0"/>
+<testcase classname="PacketExtractor #getBytes()" name="Check that callback is called once" time="0"/>
+<testcase classname="PacketExtractor #getBytes()" name="Check queue has enough bytes and return them" time="0.001"/>
+<testcase classname="PacketExtractor #getBytes()" name="Check callback is not called when not enough data" time="0"/>
+<testcase classname="PacketExtractor #getBytes()" name="Check callback is called when enough data is received" time="0"/>
+<testcase classname="PacketExtractor #getBytes()" name="Check that scope passed is used" time="0"/>
+<testcase classname="PacketExtractor #getBytes()" name="Check callback is called with the expected size after multiple socketQ messages" time="0"/>
+<testcase classname="PacketExtractor #getBytes()" name="When called without a callback it doesn't crash" time="0"/>
+<testcase classname="PacketLinkFactory #extract()" name="Should extract generation from a RedSetAck" time="0.001"/>
+<testcase classname="PacketLinkFactory #extract()" name="Should extract id from a RedPing" time="0.002"/>
+<testcase classname="PacketLinkFactory #extract()" name="Should extract time from a RedPing and it will be an instance of BigInteger" time="0"/>
+<testcase classname="PacketLinkFactory #extract()" name="Should extract a Migrate message" time="0"/>
+<testcase classname="PacketLinkFactory #extract()" name="Should extract a Migrate Data message that is a vector" time="0.001"/>
+<testcase classname="PacketLinkProcess #process()" name="Should process spice main init" time="0"/>
+<testcase classname="PacketProcess #process()" name="Should throw an exception for invalid channels" time="0"/>
+<testcase classname="PacketProcess #process()" name="Should throw an exception for null messages" time="0"/>
+<testcase classname="PacketProcess #process()" name="Should call the method process of the correct channel" time="0"/>
+<testcase classname="PacketReassembler #setListeners()" name="Check it fires packetComplete event with reply" time="0"/>
+<testcase classname="PacketReassembler #setListeners()" name="Check it fires packetComplete event with errorCode" time="0"/>
+<testcase classname="PacketReassembler #setListeners()" name="Check it waits to have data with header" time="0"/>
+<testcase classname="PacketReassembler #setListeners()" name="Check it waits to have the reply_body with header" time="0"/>
+<testcase classname="Queue #getLength()" name="Should return 0 for empty queue" time="0"/>
+<testcase classname="Queue #push()" name="Should be able to add elements as string" time="0"/>
+<testcase classname="Queue #push()" name="Should be able to add arrays" time="0"/>
+<testcase classname="Queue #push()" name="Should be able to push multiple arrays" time="0"/>
+<testcase classname="Queue #shift()" name="Should allways return array" time="0"/>
+<testcase classname="Queue #shift()" name="Should read parts of the queue" time="0"/>
+<testcase classname="Queue #shift()" name="Should read all the queue" time="0"/>
+<testcase classname="Queue #shift()" name="Should empty all the queue" time="0"/>
+<testcase classname="Queue #shift()" name="Should empty parts of the queue" time="0"/>
+<testcase classname="Queue #peek()" name="Should read a single element" time="0"/>
+<testcase classname="Queue #peek()" name="Should read 3 elements of the queue" time="0"/>
+<testcase classname="Queue #peek()" name="Should read all the elements of the queue" time="0"/>
+<testcase classname="Queue #peek()" name="Should be immutable" time="0"/>
+<testcase classname="RunQueue #getTasksLength()" name="Should return 0 for empty runqueue" time="0"/>
+<testcase classname="RunQueue #add()" name="Should add single tasks" time="0"/>
+<testcase classname="RunQueue #add()" name="Should add two tasks" time="0"/>
+<testcase classname="RunQueue #clear()" name="Should clear all tasks" time="0"/>
+<testcase classname="RunQueue #process()" name="Should call single tasks" time="0"/>
+<testcase classname="RunQueue #process()" name="Should keep scope" time="0.001"/>
+<testcase classname="RunQueue #process()" name="Should call two syncronous tasks" time="0"/>
+<testcase classname="RunQueue #process()" name="Should call asynchronous task" time="0.101"/>
+<testcase classname="RunQueue #process()" name="Should return nothing if there are no tasks" time="0"/>
+<testcase classname="RunQueue #process()" name="Should not run process if runqueue is running" time="0.1"/>
+<testcase classname="SizeDefiner #getSize()" name="The first time it is called returns the Red Link header size" time="0"/>
+<testcase classname="SizeDefiner #getSize()" name="The second time it is called returns the Red Link Reply body size" time="0.001"/>
+<testcase classname="SizeDefiner #getSize()" name="The third time it is called returns the errorCode size" time="0"/>
+<testcase classname="SizeDefiner #getSize()" name="The fourth time it is called returns the Header size" time="0.001"/>
+<testcase classname="SizeDefiner #getSize()" name="From the fifth time we have it returns the size from a passed header" time="0"/>
+<testcase classname="SizeDefiner #getSize()" name="The data must still be in the array after the call" time="0"/>
+<testcase classname="SizeDefiner #getStatus()" name="Returns reply the first time" time="0"/>
+<testcase classname="SizeDefiner #getStatus()" name="Returns error code the third time" time="0.001"/>
+<testcase classname="SizeDefiner #getStatus()" name="Returns header when header size is returned" time="0"/>
+<testcase classname="SizeDefiner #getStatus()" name="Returns body when body size is returned" time="0"/>
+<testcase classname="Socket #getStatus()" name="Should return idle before connecting" time="0"/>
+<testcase classname="Socket #connect()" name="Should set the status to prepared" time="0.004"/>
+<testcase classname="Socket #send" name="Should send the message when the websocket is ok" time="0"/>
+<testcase classname="Socket #send" name="Should encode the message sent" time="0.017"/>
+<testcase classname="Socket #send" name="Should set status = websocket.failed when error" time="0"/>
+<testcase classname="Socket #send" name="Should fire event error when error" time="0.001"/>
+<testcase classname="SocketQueue #connect()" name="Should call method connect from socket" time="0"/>
+<testcase classname="SocketQueue #disconnect()" name="Should call method disconnect from socket" time="0"/>
+<testcase classname="SocketQueue #getStatus()" name="Should call method getStatus from socket" time="0"/>
+<testcase classname="SocketQueue #send()" name="Should call send queue push on send(data, false)" time="0"/>
+<testcase classname="SocketQueue #flush()" name="Should call socket send" time="0"/>
+<testcase classname="SpiceChannel Networking" name="When open event it sends SpiceLinkInit" time="0.001"/>
+<testcase classname="SpiceChannel Networking" name="When close event it disconnects socketQueue" time="0"/>
+<testcase classname="SpiceChannel Networking" name="When error event it disconnects socketQueue" time="0"/>
+<testcase classname="SpiceChannel Networking" name="When packetComplete event containing spicePacket fires message with packet" time="0.002"/>
+<testcase classname="SpiceChannel Networking" name="When packetComplete event containing reply sends response" time="0"/>
+<testcase classname="SpiceChannel Networking" name="When packetComplete event containing errorCode 0 in main channel sends response" time="0.001"/>
+<testcase classname="SpiceChannel Networking" name="When packetComplete event containing errorCode not 0 throws exception" time="0"/>
+<testcase classname="SpiceChannel Networking" name="When packetComplete event containing errorCode 0 in display channel sends response" time="0.001"/>
+<testcase classname="SpiceChannel Networking" name="When packetComplete event containing errorCode 0 fires channelConnected event" time="0"/>
+<testcase classname="SpiceChannel #getRawSpiceMessage" name="returns a valid rawSpiceMessage" time="0"/>
+<testcase classname="SpiceChannel #connection" name="connect should call socketQ connect with host and port if they are present" time="0"/>
+<testcase classname="SpiceChannel #connection" name="connect should call socketQ connect with destInfoToken if destHost and destPort are NOT present" time="0"/>
+<testcase classname="SpiceChannel #connection" name="disconnect should call socketQ disconnect" time="0.001"/>
+<testcase classname="SpiceConnection #connect()" name="Should call connect on the main channel" time="0.001"/>
+<testcase classname="SpiceConnection #connect()" name="Should call connect on the main channel with the correct arguments" time="0.001"/>
+<testcase classname="SpiceConnection #connect()" name="Should call connect on the connectionControl with the correct arguments" time="0.001"/>
+<testcase classname="SpiceConnection #connect()" name="When a channel fire a channelConnected message should fire channelConnected message with channel" time="0"/>
+<testcase classname="SpiceConnection #connectionId()" name="Should call connect on display channel when connectionId is available" time="0.001"/>
+<testcase classname="StuckKeysHandler:" name="handleStuckKeys fires an event when pressing keycode 16" time="0.002"/>
+<testcase classname="StuckKeysHandler:" name="handleStuckKeys calls clearTimeout when releasing the previous key 16" time="0.001"/>
+<testcase classname="StuckKeysHandler:" name="handleStuckKeys fires an event when pressing keycode 17" time="0.001"/>
+<testcase classname="StuckKeysHandler:" name="handleStuckKeys calls clearTimeout when releasing the previous key 17" time="0"/>
+<testcase classname="StuckKeysHandler:" name="handleStuckKeys fires an event when pressing keycode 18" time="0.001"/>
+<testcase classname="StuckKeysHandler:" name="handleStuckKeys calls clearTimeout when releasing the previous key 18" time="0.001"/>
+<testcase classname="StuckKeysHandler:" name="releaseAllKeys fires 300 events" time="0.03"/>
+<testcase classname="StuckKeysHandler: #checkSpecialKeys" name="set shiftKeyPressed = true when a shift is pressed" time="0.001"/>
+<testcase classname="StuckKeysHandler: #checkSpecialKeys" name="set shiftKeyPressed = false when a shift is released" time="0"/>
+<testcase classname="StuckKeysHandler: #checkSpecialKeys" name="set ctrlKeyPressed = true when a ctrl is pressed" time="0"/>
+<testcase classname="StuckKeysHandler: #checkSpecialKeys" name="set ctrlKeyPressed = true when a ctrl is released" time="0"/>
+<testcase classname="StuckKeysHandler: #checkSpecialKeys" name="set altKeyPressed = true when a alt is pressed" time="0"/>
+<testcase classname="StuckKeysHandler: #checkSpecialKeys" name="set altKeyPressed = true when a alt is released" time="0.001"/>
+<testcase classname="StuckKeysHandler: #releaseSpecialKeysPressed" name="fires an event when a shift is check as pressed" time="0.001"/>
+<testcase classname="StuckKeysHandler: #releaseSpecialKeysPressed" name="set shiftKeyPressed = false" time="0"/>
+<testcase classname="StuckKeysHandler: #releaseSpecialKeysPressed" name="fires an event when a ctrl is check as pressed" time="0.001"/>
+<testcase classname="StuckKeysHandler: #releaseSpecialKeysPressed" name="set ctrlKeyPressed = false" time="0"/>
+<testcase classname="StuckKeysHandler: #releaseSpecialKeysPressed" name="fires an event when a shift is check as pressed" time="0"/>
+<testcase classname="StuckKeysHandler: #releaseSpecialKeysPressed" name="set altKeyPressed = false" time="0.001"/>
+<testcase classname="syncasynchandler" name="dispatch calls workerProcess dispatch when sync" time="0"/>
+<testcase classname="syncasynchandler" name="dispatch calls callback with dispatch result when sync" time="0"/>
+<testcase classname="syncasynchandler" name="dispatch calls AsyncWorker dispatch when async" time="0"/>
+<testcase classname="TimeLapseDetector:" name="when the timer is running normally, lastTime is updated" time="0.001"/>
+<testcase classname="TimeLapseDetector:" name="when the timer is running late an event is fired" time="0"/>
+<testcase classname="TimeLapseDetector:" name="when the timer is running late, lastTime is updated" time="0"/>
+<testcase classname="ViewQueue #getLength()" name="Should return 0 for empty queue" time="0"/>
+<testcase classname="ViewQueue #push()" name="Should be able to add elements as string" time="0.001"/>
+<testcase classname="ViewQueue #push()" name="Should be able to add arrays" time="0"/>
+<testcase classname="ViewQueue #push()" name="Should be able to push multiple arrays" time="0"/>
+<testcase classname="ViewQueue #shift()" name="Should allways return array" time="0.001"/>
+<testcase classname="ViewQueue #shift()" name="Should read parts of the queue" time="0"/>
+<testcase classname="ViewQueue #shift()" name="Should read all the queue" time="0"/>
+<testcase classname="ViewQueue #shift()" name="Should empty all the queue" time="0"/>
+<testcase classname="ViewQueue #shift()" name="Should empty parts of the queue" time="0"/>
+<testcase classname="ViewQueue #peek()" name="Should read a single element" time="0"/>
+<testcase classname="ViewQueue #peek()" name="Should read 3 elements of the queue" time="0"/>
+<testcase classname="ViewQueue #peek()" name="Should read all the elements of the queue" time="0"/>
+<testcase classname="ViewQueue #peek()" name="Should be immutable" time="0"/>
+</testsuite>

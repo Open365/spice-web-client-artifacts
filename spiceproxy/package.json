@@ -1,0 +1,8 @@
+{
+  "name": "eyeos-spiceproxy",
+  "version": "0.0.109",
+  "description": "spice client network stack library",
+  "main": "spiceproxy.js",
+  "author": "eyeOS",
+  "homepage": "http://www.eyeos.com"
+}
