@@ -2010,8 +2010,14 @@ wdi.SpiceCDisplayInit = $.spcExtend(wdi.SpiceObject, {
         this.rawData = [];
         this.rawData = this.rawData.concat(
             this.numberTo8(this.pixmap_cache_id),
-            this.numberTo32(this.pixmap_cache_size),
-            this.numberTo32(0),
+            this.numberTo8(0), //LSB
+            this.numberTo8(127),
+            this.numberTo8(0),
+            this.numberTo8(0),
+            this.numberTo8(0),
+            this.numberTo8(0),
+            this.numberTo8(0),
+            this.numberTo8(0), //MSB
             this.numberTo8(this.glz_dictionary_id),
             this.numberTo32(this.glz_dictionary_window_size)
         );
@@ -8340,14 +8346,6 @@ wdi.RasterEngine = $.spcExtend(wdi.EventObject.prototype, {
 
 		var box_dest = wdi.graphics.getBoxFromSrcArea(drawBase.box);
 
-		//depending on the rop, we can avoid to get destImg
-		if (rop === wdi.SpiceRopd.SPICE_ROPD_OP_PUT) {
-			var destImg = null;
-		} else {
-			//get the destination image, there is a ROP
-			var destImg = wdi.graphics.getRect(box_dest, this.clientGui.getCanvas(surface_id));
-		}
-
 		if (window.vdiLoadTest && window.firstImage === undefined) {
 			window.firstImage = true;
 		}
@@ -8377,15 +8375,14 @@ wdi.RasterEngine = $.spcExtend(wdi.EventObject.prototype, {
 					srcImg = newSrcImg;
 				}
 
-				//rop
-				srcImg = wdi.RasterOperation.process(rop, srcImg, destImg);
+				//depending on the rop, we can avoid to get destImg
+				if (rop !== wdi.SpiceRopd.SPICE_ROPD_OP_PUT) {
+					//rop
+					var destImg = wdi.graphics.getRect(box_dest, this.clientGui.getCanvas(surface_id));
+					srcImg = wdi.RasterOperation.process(rop, srcImg, destImg);
+				}
 
 				var context = this.clientGui.getContext(surface_id);
-
-				//TODO: swcanvas do not support clipping
-				if(args.base.clip.type === wdi.SpiceClipType.SPICE_CLIP_TYPE_RECTS) {
-					srcImg = wdi.graphics.getImageFromData(srcImg);
-				}
 
 				if(srcImg instanceof ImageData) {
 					context.putImageData(srcImg, box_dest.x, box_dest.y, 0, 0, box_dest.width, box_dest.height);
@@ -9708,13 +9705,13 @@ wdi.SpiceChannel = $.spcExtend(wdi.EventObject.prototype, {
 
 				//DUE To high level storage the memory specified for cache
 				//is 2-3 times bigger than expected.
-				var cache_size = 0*1024*1024;
+				var cache_size = 1;
 
 				var body = new wdi.SpiceCDisplayInit({
 					pixmap_cache_id:1,
 					pixmap_cache_size: cache_size,
 					glz_dictionary_id: 0,
-					glz_dictionary_window_size: 1
+					glz_dictionary_window_size: 0
 				}).marshall();
 
 				return redDisplayInit.concat(body);
@@ -11593,7 +11590,8 @@ wdi.PacketProcess = $.spcExtend(wdi.DomainObject, {
 			app: c.app
 		});
 		this.processors[wdi.SpiceVars.SPICE_CHANNEL_DISPLAY] = c.displayProcess || new wdi.DisplayPreProcess({
-			clientGui: c.clientGui
+			clientGui: c.clientGui,
+			disableMessageBuffering: c.disableMessageBuffering
 		});
 		this.processors[wdi.SpiceVars.SPICE_CHANNEL_INPUTS] = c.inputsProcess || new wdi.InputProcess({
 			clientGui: c.clientGui,
@@ -12016,20 +12014,22 @@ Application = $.spcExtend(wdi.DomainObject, {
 		if (!this.packetProcess) {
 			var displayProcess = false;
 
-			if (c.useWorkers === false) {
-				displayProcess = new wdi.DisplayProcess({
-					clientGui: this.clientGui
-				});
-			}
+            if (c.useWorkers === false) {
+                displayProcess = new wdi.DisplayProcess({
+                    clientGui: this.clientGui,
+                    disableMessageBuffering: c.disableMessageBuffering
+                });
+            }
 
-			this.packetProcess = new wdi.PacketProcess({
-				app: this,
-				clientGui: this.clientGui,
-				agent: this.agent,
-				spiceConnection: this.spiceConnection,
-	            inputsProcess: this.inputProcess,
-	            displayProcess: displayProcess
-	        })
+            this.packetProcess = new wdi.PacketProcess({
+                app: this,
+                clientGui: this.clientGui,
+                agent: this.agent,
+                spiceConnection: this.spiceConnection,
+                inputsProcess: this.inputProcess,
+                displayProcess: displayProcess,
+                disableMessageBuffering: c.disableMessageBuffering
+            });
 		}
 
         if(!this.checkActivity) {
@@ -13497,6 +13497,7 @@ wdi.DisplayProcess = $.spcExtend(wdi.EventObject.prototype, {
 		this.started = false;
 		this.waitingMessages = [];
 		this.packetWorkerIdentifier = c.packetWorkerIdentifier || new wdi.PacketWorkerIdentifier();
+		this.disableMessageBuffering = c.disableMessageBuffering;
 	},
 
 	dispose: function () {
@@ -13516,11 +13517,11 @@ wdi.DisplayProcess = $.spcExtend(wdi.EventObject.prototype, {
 	},
 
 	process: function(spiceMessage) {
-		//this._process(spiceMessage);
-		//disable requestanimationframe equivalent for the moment
-		//the remove redundant draws implementation is buggy
-		//and there are considerations on how it is implemented
-
+		//if message buffering is disabled, skip queuing and looking for duplicates, just process the message ASAP
+		if(this.disableMessageBuffering) {
+			this._process(spiceMessage);
+			return;
+		}
 
 		var self = this;
 		this.waitingMessages.push(spiceMessage);
@@ -13706,7 +13707,8 @@ wdi.DisplayPreProcess = $.spcExtend(wdi.EventObject.prototype, {
 		this.idleConsumers = [];
 		this.superInit();
 		this.displayProcess = c.displayProcess || new wdi.DisplayProcess({
-			clientGui: c.clientGui
+				clientGui: c.clientGui,
+				disableMessageBuffering: c.disableMessageBuffering
 		});
 		this.clientGui = c.clientGui;
 
