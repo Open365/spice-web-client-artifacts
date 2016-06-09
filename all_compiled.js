@@ -9543,12 +9543,28 @@ wdi.SpiceChannel = $.spcExtend(wdi.EventObject.prototype, {
 		this.ackWindow = 0;
 	},
 
+	startHandshakeTimeout: function () {
+		var self = this;
+		this.handshakeTimeout = window.setTimeout(function () {
+				var err = new Error("Handshake timeout");
+				err.code = 4200;
+				
+				self.fire('error', err);
+			}, 5000);
+	},
+
+	cancelHandshakeTimeout: function () {
+		clearTimeout(this.handshakeTimeout);
+	},
+
 	setListeners: function() {
 		var date;
+		var self = this;
 		this.packetReassembler.addListener('packetComplete', function(e) {
 			var rawMessage = e;
 			if (rawMessage.status === 'spicePacket') {
 				
+				self.cancelHandshakeTimeout();
 				if (wdi.logOperations) {
 					wdi.DataLogger.logNetworkTime();
 					date = Date.now();
@@ -9598,6 +9614,7 @@ wdi.SpiceChannel = $.spcExtend(wdi.EventObject.prototype, {
 		this.channel = channel;
 		this.connectionId = connectionId || 0;
 		this.socketQ.connect(url);
+		this.startHandshakeTimeout();
 		this.proxy = proxy;
 		this.token = connectionInfo.token;
 		this.packetReassembler.start();
@@ -12304,6 +12321,7 @@ Application = $.spcExtend(wdi.DomainObject, {
         try {
             this.spiceConnection.connect(connectionInfo);
         } catch (e) {
+			
             this.clientGui.showError(e.message);
         }
     },
