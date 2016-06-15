@@ -10872,11 +10872,19 @@ wdi.ClientGui = $.spcExtend(wdi.EventObject.prototype, {
 		this.clipBoardDataParser = c.clipBoardDataParser || new wdi.ClipboardDataParser({});
 		this.localClipboard = c.localClipboard || new wdi.LocalClipboard({clientGui: this});
 		this.app = c.app;
+
+		var self = this;
+		this.eventHandlers = {
+			hide: function () {
+				self.stuckKeysHandler.releaseAllKeys()
+			}
+		};
+		window.$(document).on(this.eventHandlers);
 	},
 
 	dispose: function() {
 		
-
+		$(document).off(this.eventHandlers);
 		this.unbindDOM();
 		this.removeAllCanvases();
 		this.inputManager.dispose();
@@ -14409,6 +14417,43 @@ wdi.MainProcess = $.spcExtend(wdi.EventObject.prototype, {
 });
 
 /*
+ Copyright (c) 2016 eyeOS
+
+ This file is part of Open365.
+
+ Open365 is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+wdi.KeyEvent = {
+
+	isCtrlPressed: function (e) {
+		function isMac () {
+			return navigator.platform.indexOf('Mac') != -1
+		}
+
+		if (!e) {
+			return false;
+		}
+		var ctrlKey = e.ctrlKey;
+		if (isMac()) {
+			ctrlKey = e.metaKey;
+		}
+		return ctrlKey;
+	}
+};
+
+/*
     Copyright (c) 2016 eyeOS
 
     This file is part of Open365.
@@ -14629,6 +14674,10 @@ wdi.KeymapES = function() {
     var ctrlKeymapES = [];
     ctrlKeymapES[90]                = 0x2C; // z
 
+    // forbidden combinations that we are not going to send.
+    var ctrlForbiddenKeymap = [];
+    ctrlForbiddenKeymap[9]       = 0x0F; // TAB
+
     // reserved ctrl+? combinations we want to intercept from browser and inject manually to spice
     var reservedCtrlKeymap = [];
     reservedCtrlKeymap[81]                = 0x10; // q
@@ -14664,6 +14713,10 @@ wdi.KeymapES = function() {
 
         getCtrlKeymap: function() {
             return ctrlKeymapES;
+        },
+
+        getCtrlForbiddenKeymap: function() {
+            return ctrlForbiddenKeymap;
         },
 
         getReservedCtrlKeymap: function() {
@@ -14840,6 +14893,10 @@ wdi.KeymapUS = function() {
     var ctrlkeymapUS = [];
     ctrlkeymapUS[90]                = 0x2C; // z
 
+    // forbidden combinations that we are not going to send.
+    var ctrlForbiddenKeymap = [];
+    ctrlForbiddenKeymap[9]       = 0x0F; // TAB
+
     // reserved ctrl+? combinations we want to intercept from browser and inject manually to spice
     var reservedCtrlKeymap = [];
     reservedCtrlKeymap[65]                = 0x1E; // a
@@ -14877,6 +14934,10 @@ wdi.KeymapUS = function() {
 
         getCtrlKeymap: function() {
             return ctrlkeymapUS;
+        },
+
+        getCtrlForbiddenKeymap: function() {
+            return ctrlForbiddenKeymap;
         },
 
         getReservedCtrlKeymap: function() {
@@ -14920,6 +14981,7 @@ wdi.keyShortcutsHandled = {
 wdi.Keymap = {
     keymap: {},
     ctrlKeymap: {},
+    ctrlForbiddenKeymap: {},
     charmap: {},
     ctrlPressed: false,
     twoBytesScanCodes: [0x5B, 0xDB, /*0x38, 0xB8,*/ 0x5C, 0xDC, 0x1D, 0x9D, 0x5D, 0xDD, 0x52, 0xD2, 0x53, 0xD3, 0x4B, 0xCB, 0x47, 0xC9, 0x4F, 0xCF, 0x48, 0xC8, 0x50, 0xD0, 0x49, 0xC9, 0x51, 0xD1, 0x4D, 0xCD, 0x1C, 0x9C],
@@ -14928,11 +14990,13 @@ wdi.Keymap = {
         try {
             this.keymap = wdi['Keymap' + layout.toUpperCase()].getKeymap();
             this.ctrlKeymap = wdi['Keymap' + layout.toUpperCase()].getCtrlKeymap();
+            this.ctrlForbiddenKeymap = wdi['Keymap' + layout.toUpperCase()].getCtrlForbiddenKeymap();
             this.reservedCtrlKeymap =  wdi['Keymap' + layout.toUpperCase()].getReservedCtrlKeymap();
             this.charmap = wdi['Keymap' + layout.toUpperCase()].getCharmap();
         } catch(e) {
 			this.keymap = wdi.KeymapES.getKeymap();
             this.ctrlKeymap = wdi.KeymapES.getCtrlKeymap();
+            this.ctrlForbiddenKeymap = wdi.KeymapES.getCtrlForbiddenKeymap();
             this.reservedCtrlKeymap =  wdi.KeymapES.getReservedCtrlKeymap();
             this.charmap = wdi.KeymapES.getCharmap();
 		}
@@ -14950,7 +15014,8 @@ wdi.Keymap = {
     getScanCodes: function(e) {
 		if (e['hasScanCode']) {
 			return e['scanCode'];
-		} else if (this.handledByCtrlKeyCode(e['type'], e['keyCode'], e['generated'])) {// before doing anything else we check if the event about to be handled has to be intercepted
+		} else if (this.isForbiddenCombination(e)) {
+            return [];
             return this.getScanCodeFromKeyCode(e['keyCode'], e['type'], this.ctrlKeymap, this.reservedCtrlKeymap);
         } else if (this.isGeneratedShortcut(e['type'], e['keyCode'], e['generated'])) {
             return this.getScanCodeFromKeyCode(e['keyCode'], e['type'], this.ctrlKeymap, this.reservedCtrlKeymap);
@@ -14988,35 +15053,32 @@ wdi.Keymap = {
         return key;
     },
 
+    isForbiddenCombination: function(e) {
+        var keyCode = e['keyCode'],
+            type = e['type'],
+            keymap = this.ctrlForbiddenKeymap;
+
+        if(wdi.KeyEvent.isCtrlPressed(e) && keymap[keyCode]) {
+            if(keymap[keyCode]) {
+                return true;
+            }
+        }
+        return false;
+    },
+
     controlPressed: function(keyCode, type, event) {
-        function isMac () {
-            return navigator.platform.indexOf('Mac') != -1
-        }
-
-        function isCtrlPressed(e) {
-            if (!e) {
-                return false;
-            }
-            var ctrlKey = e.ctrlKey;
-            if(isMac()) {
-                ctrlKey = e.metaKey;
-            }
-            return ctrlKey;
-        }
-
         if (keyCode !== 17 && keyCode !== 91) {  // Ctrl or CMD key
             if (type === 'keydown') {
-                if(isCtrlPressed(event)){
+                if(wdi.KeyEvent.isCtrlPressed(event)){
                     this.ctrlPressed = true;
                 }
             }
             else if (type === 'keyup') {
-                if(!isCtrlPressed(event)){
+                if(!wdi.KeyEvent.isCtrlPressed(event)){
                     this.ctrlPressed = false;
                 }
             }
         }
-
     },
 
     handledByCtrlKeyCode: function(type, keyCode, generated) {
