@@ -14443,7 +14443,7 @@ wdi.KeyEvent = {
 		}
 
 		if (!e) {
-			return false;
+			throw new Error('isCtrlPressed: No event provided.')
 		}
 		var ctrlKey = e.ctrlKey;
 		if (isMac()) {
@@ -15067,6 +15067,7 @@ wdi.Keymap = {
     },
 
     controlPressed: function(keyCode, type, event) {
+        if (!event) return false;
         if (keyCode !== 17 && keyCode !== 91) {  // Ctrl or CMD key
             if (type === 'keydown') {
                 if(wdi.KeyEvent.isCtrlPressed(event)){
