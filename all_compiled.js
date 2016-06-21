@@ -14752,6 +14752,116 @@ wdi.KeymapES = function() {
  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+wdi.scanCodeObjProvider = $.spcExtend(wdi.EventObject.prototype, {
+	init: function (charObj) {
+		this.charObj = charObj;
+		this.prefix = this.charObj.prefix || [];
+		this.suffix = this.charObj.suffix || [];
+	},
+
+	getPrefix: function () {
+		return this.prefix;
+	},
+
+	getSufix: function () {
+		return this.suffix;
+	},
+
+	setPrefix: function (val) {
+		this.prefix = val;
+	},
+	setSuffix: function (val) {
+		this.suffix = val;
+	},
+
+	getScanCode: function () {
+		var res = [];
+		var prefix = this.getPrefix();
+		if (prefix.length > 0) {
+			res = res.concat(prefix);
+		}
+		var main = this.charObj.main;
+		res = res.concat(main);
+
+		var suffix = this.getSufix();
+		if (suffix.length > 0) {
+			res = res.concat(suffix);
+		}
+
+		return res;
+	}
+});
+
+/*
+ Copyright (c) 2016 eyeOS
+
+ This file is part of Open365.
+
+ Open365 is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+wdi.ScanCodeObjModifier = $.spcExtend(wdi.EventObject.prototype, {
+	init: function (charObj) {
+		this.scanCodeObjProvider = new wdi.scanCodeObjProvider(charObj);
+		this.prefix = this.scanCodeObjProvider.getPrefix();
+		this.suffix = this.scanCodeObjProvider.getSufix();
+	},
+
+	removeShift: function () {
+		var shiftDownScanCode = [0x2A, 0, 0, 0];
+		var shiftUpScanCode = [0xAA, 0, 0, 0];
+
+		this.prefix = this._removeKeyFromPart(shiftDownScanCode, this.prefix);
+		this.scanCodeObjProvider.setPrefix(this.prefix);
+		this.suffix = this._removeKeyFromPart(shiftUpScanCode, this.suffix);
+
+		this.scanCodeObjProvider.setSuffix(this.suffix);
+
+		return this.getScanCode();
+	},
+
+	getScanCode: function () {
+		return this.scanCodeObjProvider.getScanCode();
+	},
+
+	_removeKeyFromPart: function (key, part) {
+		return part.filter(function (item) {
+			return !(_.isEqual(item, key))
+		});
+	}
+
+});
+
+/*
+ Copyright (c) 2016 eyeOS
+
+ This file is part of Open365.
+
+ Open365 is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 // These tables map the js keyboard keys to the spice equivalent
 wdi.KeymapObjES = function() {
 	var charmapES = {};
@@ -14904,36 +15014,11 @@ wdi.KeymapObjES = function() {
 	charmapES['_']   = {"prefix":[[42,0,0,0]],"main":[[53,0,0,0],[181,0,0,0]],"suffix":[[170,0,0,0]]};
 	charmapES[' ']   = {"prefix":[[57,0,0,0],[185,0,0,0]],"main":[],"suffix":[]};
 
-
-
-	function getPrefix (char) {
-		var prefix = charmapES[char].prefix;
-		return prefix || [];
-	}
-
-	function getSufix (char) {
-		var suffix = charmapES[char].suffix;
-		return suffix || [];
-	}
-
-	function getVal (char) {
-		var res = [];
-		var prefix = getPrefix(char);
-		if (prefix.length > 0) {
-			res = res.concat(prefix);
-		}
-		var main = charmapES[char].main;
-		res = res.concat(main);
-
-		var suffix = getSufix(char);
-		if (suffix.length > 0) {
-			res = res.concat(suffix);
-		}
-
-		return res;
-	}
 	return {
-		getVal: getVal,
+		getScanCode: function (char) {
+			var charObj = new wdi.scanCodeObjProvider(this.getCharmap()[char]);
+			return charObj.getScanCode();
+		},
 		getCharmap: function() {
 			return charmapES;
 		}
